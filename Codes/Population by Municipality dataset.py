@@ -8,13 +8,12 @@ import pandas as pd
 import os
 
 # Setting working directory
-os.chdir(r'C:\Users\femdi\Documents\Artigos\FDN Outcomes')
-
+os.chdir(r'C:\Users\femdi\Documents\Github')
 
 ''' Table with Population municipal by Year (2001 a 2021), downloaded in SIDRA'''
 
 # Source: https://sidra.ibge.gov.br/tabela/6579#/g/86/v/all/p/all/l/v,p,t/cfg/cod, 
-population_hist = pd.read_excel(r'Inputs/IBGE/Population by Municipality IBGE 2001 to 2021.xlsx', 
+population_hist = pd.read_excel(r'Inputs/Population by Municipality IBGE 2001 to 2021.xlsx', 
                           header = 3, sheet_name = 0, na_values = '...').fillna(0)
 # Renaming
 population_hist = population_hist.rename(columns = {'Unnamed: 0':'Code',
@@ -27,7 +26,7 @@ population_hist['Code_6dig'] = [str(population_hist.loc[j,'Code'])[:6] for j in 
 # Source: https://www.ibge.gov.br/estatisticas/sociais/populacao/9103-estimativas-de-populacao.html?=&t=downloads
 for i in [1992,1993,1994,1995,1997,1998,1999]:
     #Importing
-    pop_year = pd.read_excel(fr'Inputs/IBGE/estimativa_populacao_{i}.xls',header = 2)
+    pop_year = pd.read_excel(fr'Inputs/estimativa_populacao_{i}.xls',header = 2)
     
     # Renaming and formatting municipality code
     pop_year.columns = ['UF', 'Code_State', 'Code_Munic', 'Municipality', str(i)]
@@ -40,7 +39,7 @@ for i in [1992,1993,1994,1995,1997,1998,1999]:
 ''' Population from 1991, 2000, 2010 and 2022 Census and 2007 and 1996 count '''
 # 2000 e 2010
 # Source: https://sidra.ibge.gov.br/tabela/202#/n1/all/n6/all/u/y/v/allxp/p/1991,2000,2010/c2/0/c1/0/l/v,p+c2,t+c1/cfg/cod,
-population_censo = pd.read_excel(r'Inputs/IBGE/Population by Municipality Census 1991 2000 and 2010.xlsx', 
+population_censo = pd.read_excel(r'Inputs/Population by Municipality Census 1991 2000 and 2010.xlsx', 
                           header = 5, sheet_name = 0, na_values = '...').fillna(0)
 # Renaming
 population_censo.columns = ['Code', 'Municipality', 'Total', '1991', '2000', '2010']
@@ -50,7 +49,7 @@ population_censo = population_censo[['Code', '1991', '2000', '2010']]
 
 # 2022
 # Source: https://sidra.ibge.gov.br/tabela/4714#/n6/all/v/93/p/all/l/v,p,t/cfg/cod,
-population_censo_2022 = pd.read_excel(r'Inputs/IBGE/Population by Municipality Census 2022.xlsx', 
+population_censo_2022 = pd.read_excel(r'Inputs/Population by Municipality Census 2022.xlsx', 
                           header = 3, sheet_name = 0, na_values = '...').fillna(0)
 # Renaming
 population_censo_2022.columns = ['Code', 'Municipality', '2022']
@@ -60,7 +59,7 @@ population_censo_2022 = population_censo_2022[['Code', '2022']]
 
 # 2007
 # Source: https://sidra.ibge.gov.br/tabela/579#/n6/all/v/2049/p/all/c1/6795/l/v,p+c1,t
-pop_2007 = pd.read_excel(r'Inputs/IBGE/Population by Municipality Count 2007.xlsx', 
+pop_2007 = pd.read_excel(r'Inputs/Population by Municipality Count 2007.xlsx', 
                           header = 4, sheet_name = 0, na_values = '...').fillna(0)
 # Renaming
 pop_2007.columns = ['Code', 'Municipality', '2007']
@@ -71,7 +70,7 @@ pop_2007 = pop_2007[['Code', '2007']]
 
 #1996
 # Source: https://sidra.ibge.gov.br/tabela/305#/n6/all/v/allxp/p/all/c293/0/c1/0/l/v,p+c293,c1+t
-pop_1996 = pd.read_excel(r'Inputs/IBGE/Population by Municipality Count 1996.xlsx', 
+pop_1996 = pd.read_excel(r'Inputs/Population by Municipality Count 1996.xlsx', 
                           header = 4, sheet_name = 0, na_values = '...').iloc[:,1:].fillna(0)
 # Renaming
 pop_1996.columns = ['Code', 'Municipality', '1996']
@@ -101,10 +100,8 @@ for i in range(len(population_1991_2022)):
    # if population_1991_2022.loc[i,'2000'] == 0:
      #   population_1991_2022.loc[i,'2000'] = (population_1991_2022.loc[i,'2001']/population_1991_2022.loc[i,'2002'])*population_1991_2022.loc[i,'2001']
 
-
 # Removing 6 cities with missing population in 2010
 population_1991_2022 = population_1991_2022.dropna(subset = '2010')
-
 
 # Pivoting the table
 population_1991_2022 = pd.melt(population_1991_2022, id_vars = 'Code', 
